@@ -21,7 +21,7 @@ jobs:
       - run: php tests/check-sharing.php
       - run: php tests/check-lifecycle.php
   javascript:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - run: find files -name '*.js' -print0 | xargs -0 -n1 node --check
