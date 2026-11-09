@@ -5,7 +5,7 @@ Share Everywhere adds a configurable sharing and profile widget to product pages
 ## Install and configure
 
 1. Copy the contents of `files/zc_plugins/` into the store's `zc_plugins/` directory.
-2. In Zen Cart admin, open **Modules > Plugin Manager** and install **Share Everywhere for Zen Cart 1.0.4**.
+2. In Zen Cart admin, open **Modules > Plugin Manager** and install **Share Everywhere for Zen Cart 1.0.5**.
 3. Open **Catalog > Share Everywhere**, choose a layout, and enable the destinations you want.
 4. Select **Enable on product pages**, save, and open an enabled product page.
 
@@ -15,7 +15,7 @@ The widget is disabled at installation. It uses the standard footer notifier in 
 
 - Choose a single button, compact icon row, full row, grid, or vertical stack independently for desktop and mobile.
 - Choose click or hover-and-click expansion. On a touch device or keyboard, use the same disclosure button.
-- Configure order, compact-row pinning, alignment, icon size, and labels.
+- Configure order, compact-row pinning, alignment, button size, and labels. Choose whether to show the share title and use monochrome, platform, or custom icon colors.
 - Share buttons build links from the product title, canonical URL, and main image where supported. Pinterest is hidden for products without a main image. Profile and invite buttons require the store's public URL.
 - Native Share is available on supported browsers. Copy link, print, and a locally generated product QR code are also available.
 - Optional destinations grouped under **Additional services via AddToAny** send the shopper to AddToAny after a click. The product page loads all icons and scripts from the store. Third-party destinations may require a login or app, and SMS support varies by device.

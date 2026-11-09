@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.5
+
+- Add a share title toggle and monochrome, platform, or custom icon colors.
+- Make the small, medium, and large presets change both the icon and button dimensions.
+
 ## 1.0.4
 
 - Display the configured share title above the product-page controls when the layout uses a More button or has no disclosure button.

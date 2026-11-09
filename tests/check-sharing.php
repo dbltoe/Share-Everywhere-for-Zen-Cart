@@ -25,13 +25,19 @@ function check(bool $passed, string $message): void
     }
 }
 
-$root = dirname(__DIR__) . '/files/zc_plugins/ShareEverywhere/v1.0.4';
+$root = dirname(__DIR__) . '/files/zc_plugins/ShareEverywhere/v1.0.5';
 require $root . '/lib/ShareEverywhere.php';
 $manifest = require $root . '/manifest.php';
 check($manifest['pluginVersion'] === 'v' . ShareEverywhere::VERSION, 'Version mismatch.');
 check($manifest['pluginId'] === 0, 'Unlisted plugins still need a Plugin Manager ID field.');
 $settings = ShareEverywhere::defaults();
 check(!$settings['enabled'], 'Plugin should start disabled.');
+$appearanceErrors = [];
+check(ShareEverywhere::normalize([], $appearanceErrors)['show_title'], 'Existing settings should keep the title visible.');
+$appearance = ShareEverywhere::normalize(['show_title' => '0', 'color_mode' => 'custom', 'icon_color' => '#A1357C'], $appearanceErrors);
+check(!$appearance['show_title'] && $appearance['icon_color'] === '#a1357c', 'Appearance options were not saved.');
+check(ShareEverywhere::normalize(['icon_color' => 'red; color:black'], $appearanceErrors)['icon_color'] === '#20262d',
+    'Invalid icon color was accepted.');
 
 $db = new class {
     public function Execute(string $sql, int $limit): object
@@ -81,6 +87,6 @@ ob_start();
 require $root . '/lib/storefront.php';
 $html = ob_get_clean();
 check(str_contains($html, '&lt;Share&gt;'), 'Custom label was not escaped.');
-check(str_contains($html, '/store/zc_plugins/ShareEverywhere/v1.0.4/assets/storefront.js'), 'Asset path is incorrect.');
+check(str_contains($html, '/store/zc_plugins/ShareEverywhere/v1.0.5/assets/storefront.js'), 'Asset path is incorrect.');
 check(!str_contains($html, 'qrcode.js'), 'QR code library loaded while the QR button was disabled.');
 echo "Product data, URL validation, settings, and storefront rendering checks passed.\n";
