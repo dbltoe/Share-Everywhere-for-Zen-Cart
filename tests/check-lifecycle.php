@@ -58,7 +58,7 @@ namespace {
         if (!$passed) throw new RuntimeException($message);
     }
 
-    $root = dirname(__DIR__) . '/files/zc_plugins/ShareEverywhere/v1.0.5';
+    $root = dirname(__DIR__) . '/files/zc_plugins/ShareEverywhere/v1.0.6';
     // A request can load the installed version's helpers before the new installer.
     require dirname($root) . '/v1.0.0/admin/includes/functions/extra_functions/share_everywhere_menu.php';
     require $root . '/Installer/ScriptedInstaller.php';

@@ -25,7 +25,7 @@ function check(bool $passed, string $message): void
     }
 }
 
-$root = dirname(__DIR__) . '/files/zc_plugins/ShareEverywhere/v1.0.5';
+$root = dirname(__DIR__) . '/files/zc_plugins/ShareEverywhere/v1.0.6';
 require $root . '/lib/ShareEverywhere.php';
 $manifest = require $root . '/manifest.php';
 check($manifest['pluginVersion'] === 'v' . ShareEverywhere::VERSION, 'Version mismatch.');
@@ -82,11 +82,13 @@ check(array_column(array_slice($buttons, 0, 2), 'key') === ['follow-tiktok', 'cu
 check(!in_array('follow-instagram', array_column($buttons, 'key'), true), 'Unsafe profile rendered.');
 check(!in_array('pinterest', array_column(ShareEverywhere::buttons($settings, ['image' => ''] + $product), 'key'), true),
     'Pinterest should be hidden for products without an image.');
+check(str_contains(ShareEverywhere::storefrontIcon('douban'), 'data-se-icon="link"'),
+    'Douban should use the bundled generic link icon.');
 $assets = ShareEverywhere::assets(DIR_WS_CATALOG);
 ob_start();
 require $root . '/lib/storefront.php';
 $html = ob_get_clean();
 check(str_contains($html, '&lt;Share&gt;'), 'Custom label was not escaped.');
-check(str_contains($html, '/store/zc_plugins/ShareEverywhere/v1.0.5/assets/storefront.js'), 'Asset path is incorrect.');
+check(str_contains($html, '/store/zc_plugins/ShareEverywhere/v1.0.6/assets/storefront.js'), 'Asset path is incorrect.');
 check(!str_contains($html, 'qrcode.js'), 'QR code library loaded while the QR button was disabled.');
 echo "Product data, URL validation, settings, and storefront rendering checks passed.\n";

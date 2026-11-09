@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.6
+
+- Prepare the free public package with updated compatibility, installation, and support documentation.
+- Use the standard link icon for the Douban destination.
+
 ## 1.0.5
 
 - Add a share title toggle and monochrome, platform, or custom icon colors.
