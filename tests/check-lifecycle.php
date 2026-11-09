@@ -58,10 +58,14 @@ namespace {
         if (!$passed) throw new RuntimeException($message);
     }
 
-    $root = dirname(__DIR__) . '/files/zc_plugins/ShareEverywhere/v1.0.2';
+    $root = dirname(__DIR__) . '/files/zc_plugins/ShareEverywhere/v1.0.3';
     // A request can load the installed version's helpers before the new installer.
     require dirname($root) . '/v1.0.0/admin/includes/functions/extra_functions/share_everywhere_menu.php';
     require $root . '/Installer/ScriptedInstaller.php';
+    $adminPage = file_get_contents($root . '/admin/share_everywhere.php');
+    check(strpos($adminPage, "require DIR_WS_INCLUDES . 'admin_html_head.php';") < strpos($adminPage, "'header.php';")
+        && str_contains($adminPage, "require DIR_WS_INCLUDES . 'admin_html_head.php';")
+        && !str_contains($adminPage, 'includes/stylesheet.css'), 'Use the supported Zen Cart admin head before the header.');
     $installer = new ScriptedInstaller();
     check($installer->install(), 'Install failed.');
     check($pages['catalogShareEverywhere'] === ['BOX_CATALOG_SHARE_EVERYWHERE', 'FILENAME_SHARE_EVERYWHERE', '', 'catalog', 'Y'],

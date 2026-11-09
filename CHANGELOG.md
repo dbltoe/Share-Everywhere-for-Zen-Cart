@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.3
+
+- Use the standard Zen Cart admin HTML head on the settings page to resolve the legacy-header warning.
+
 ## 1.0.2
 
 - Repair the Catalog menu after Zen Cart loads its configuration, even when the previous version was loaded earlier in the upgrade request.
