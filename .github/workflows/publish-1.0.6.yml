@@ -1,0 +1,48 @@
+name: Publish Share Everywhere 1.0.6
+on:
+  push:
+    branches: [publish/v1.0.6]
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RELEASE_COMMIT: 64156d525055d0e01b622bdc219055a0601b6ed6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build and verify the public ZIP
+        run: |
+          python3 - <<'PY'
+          import os, subprocess
+          from zipfile import ZIP_DEFLATED, ZipFile
+          commit = os.environ['RELEASE_COMMIT']
+          prefix = 'files/zc_plugins/ShareEverywhere/v1.0.6'
+          docs = ['README.md', 'DESCRIPTION.md', 'CHANGELOG.md', 'LICENSE']
+          files = subprocess.check_output(['git', 'ls-tree', '-r', '--name-only', commit, '--', prefix]).decode().splitlines()
+          assert len(files) == 74
+          def source(path):
+              return subprocess.check_output(['git', 'show', f'{commit}:{path}'])
+          filename = 'Share-Everywhere-for-Zen-Cart-1.0.6.zip'
+          with ZipFile(filename, 'w', compression=ZIP_DEFLATED, compresslevel=9) as package:
+              for path in docs + files:
+                  data = source(path)
+                  if path == 'README.md':
+                      original = b"Copy the contents of `files/zc_plugins/` into the store's `zc_plugins/` directory."
+                      assert data.count(original) == 1
+                      data = data.replace(original, b"Copy the included `zc_plugins/` directory into the store root.")
+                  package.writestr(path.removeprefix('files/'), data)
+          with ZipFile(filename) as package:
+              assert package.testzip() is None
+              assert set(package.namelist()) == {path.removeprefix('files/') for path in docs + files}
+              for path in files:
+                  assert package.read(path.removeprefix('files/')) == source(path)
+          PY
+      - name: Publish and verify the GitHub release
+        run: |
+          git show "$RELEASE_COMMIT:DESCRIPTION.md" | tail -n +3 > "${RUNNER_TEMP}/share-everywhere-release.md"
+          gh release create v1.0.6 Share-Everywhere-for-Zen-Cart-1.0.6.zip --target "$RELEASE_COMMIT" --title "Share Everywhere for Zen Cart 1.0.6" --notes-file "${RUNNER_TEMP}/share-everywhere-release.md"
+          gh release view v1.0.6 --json url,tagName,isDraft,assets
