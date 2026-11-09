@@ -29,6 +29,7 @@ $root = dirname(__DIR__) . '/files/zc_plugins/ShareEverywhere/v1.0.0';
 require $root . '/lib/ShareEverywhere.php';
 $manifest = require $root . '/manifest.php';
 check($manifest['pluginVersion'] === 'v' . ShareEverywhere::VERSION, 'Version mismatch.');
+check($manifest['pluginId'] === 0, 'Unlisted plugins still need a Plugin Manager ID field.');
 $settings = ShareEverywhere::defaults();
 check(!$settings['enabled'], 'Plugin should start disabled.');
 
