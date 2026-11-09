@@ -82,8 +82,8 @@ check(array_column(array_slice($buttons, 0, 2), 'key') === ['follow-tiktok', 'cu
 check(!in_array('follow-instagram', array_column($buttons, 'key'), true), 'Unsafe profile rendered.');
 check(!in_array('pinterest', array_column(ShareEverywhere::buttons($settings, ['image' => ''] + $product), 'key'), true),
     'Pinterest should be hidden for products without an image.');
-check(str_contains(ShareEverywhere::storefrontIcon('douban'), 'data-se-icon="link"'),
-    'Douban should use the bundled generic link icon.');
+check(str_contains(ShareEverywhere::storefrontIcon('douban'), 'data-se-icon="douban"'),
+    'Douban should use its dedicated local icon.');
 $assets = ShareEverywhere::assets(DIR_WS_CATALOG);
 ob_start();
 require $root . '/lib/storefront.php';

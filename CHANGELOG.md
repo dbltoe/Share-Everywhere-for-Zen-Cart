@@ -3,7 +3,7 @@
 ## 1.0.6
 
 - Prepare the free public package with updated compatibility, installation, and support documentation.
-- Use the standard link icon for the Douban destination.
+- Include a dedicated Douban destination icon drawn for the plugin.
 
 ## 1.0.5
 
