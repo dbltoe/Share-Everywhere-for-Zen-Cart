@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.2
+
+- Repair the Catalog menu after Zen Cart loads its configuration, even when the previous version was loaded earlier in the upgrade request.
+
 ## 1.0.1
 
 - Repair the Catalog menu registration on install and upgrade while preserving settings and admin profile assignments.

@@ -7,7 +7,7 @@ const { chromium } = require('playwright');
 
 async function main() {
     const html = execFileSync('php', [path.join(__dirname, 'render-fixture.php')], {encoding: 'utf8'});
-    const plugin = path.join(__dirname, '..', 'files', 'zc_plugins', 'ShareEverywhere', 'v1.0.1');
+    const plugin = path.join(__dirname, '..', 'files', 'zc_plugins', 'ShareEverywhere', 'v1.0.2');
     const browser = await chromium.launch();
     try {
         const page = await browser.newPage({viewport: {width: 1100, height: 800}});
@@ -21,8 +21,8 @@ async function main() {
                 await route.abort();
             } else if (url.pathname === '/duck') {
                 await route.fulfill({contentType: 'text/html', body: html});
-            } else if (url.pathname.startsWith('/zc_plugins/ShareEverywhere/v1.0.1/assets/')) {
-                await route.fulfill({path: path.join(plugin, url.pathname.split('/v1.0.1/')[1])});
+            } else if (url.pathname.startsWith('/zc_plugins/ShareEverywhere/v1.0.2/assets/')) {
+                await route.fulfill({path: path.join(plugin, url.pathname.split('/v1.0.2/')[1])});
             } else {
                 await route.fulfill({status: 404});
             }

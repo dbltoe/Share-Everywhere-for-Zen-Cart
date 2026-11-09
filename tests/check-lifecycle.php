@@ -58,7 +58,9 @@ namespace {
         if (!$passed) throw new RuntimeException($message);
     }
 
-    $root = dirname(__DIR__) . '/files/zc_plugins/ShareEverywhere/v1.0.1';
+    $root = dirname(__DIR__) . '/files/zc_plugins/ShareEverywhere/v1.0.2';
+    // A request can load the installed version's helpers before the new installer.
+    require dirname($root) . '/v1.0.0/admin/includes/functions/extra_functions/share_everywhere_menu.php';
     require $root . '/Installer/ScriptedInstaller.php';
     $installer = new ScriptedInstaller();
     check($installer->install(), 'Install failed.');
@@ -76,11 +78,12 @@ namespace {
     check($pages['catalogShareEverywhere'][4] === 'N', 'Upgrade replaced the existing menu registration.');
 
     unset($pages['catalogShareEverywhere']);
+    // Admin bootstrap has already included the helper before loading settings.
+    require_once $root . '/admin/includes/functions/extra_functions/share_everywhere_menu.php';
+    check(!isset($pages['catalogShareEverywhere']), 'Bootstrap registered a menu before settings loaded.');
     define(ShareEverywhere::KEY, $installer->settings[ShareEverywhere::KEY]);
     class base {}
     require $root . '/admin/includes/classes/observers/auto.share_everywhere_admin.php';
-    // Simulate a later request in which the bootstrap has already been included by core.
-    include $root . '/admin/includes/functions/extra_functions/share_everywhere_menu.php';
     new zcObserverShareEverywhereAdmin();
     check(isset($pages['catalogShareEverywhere']), 'Runtime menu repair did not run.');
     check($installer->uninstall() && $pages === ['unrelated' => ['something']], 'Uninstall affected an unrelated registration.');
