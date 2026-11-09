@@ -5,7 +5,7 @@ Share Everywhere adds a configurable sharing and profile widget to product pages
 ## Install and configure
 
 1. Copy the contents of `files/zc_plugins/` into the store's `zc_plugins/` directory.
-2. In Zen Cart admin, open **Modules > Plugin Manager** and install **Share Everywhere for Zen Cart 1.0.0**.
+2. In Zen Cart admin, open **Modules > Plugin Manager** and install **Share Everywhere for Zen Cart 1.0.1**.
 3. Open **Catalog > Share Everywhere**, choose a layout, and enable the destinations you want.
 4. Select **Enable on product pages**, save, and open an enabled product page.
 

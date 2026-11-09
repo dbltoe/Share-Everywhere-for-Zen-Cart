@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 define('IS_ADMIN_FLAG', false);
-$root = dirname(__DIR__) . '/files/zc_plugins/ShareEverywhere/v1.0.0';
+$root = dirname(__DIR__) . '/files/zc_plugins/ShareEverywhere/v1.0.1';
 require $root . '/lib/ShareEverywhere.php';
 
 $settings = ShareEverywhere::defaults();

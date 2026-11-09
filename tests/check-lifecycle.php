@@ -27,8 +27,24 @@ namespace Zencart\PluginSupport {
 
 namespace {
     define('IS_ADMIN_FLAG', true);
+    define('TABLE_ADMIN_PAGES', 'admin_pages');
     $pages = ['unrelated' => ['something']];
-    function zen_page_key_exists(string $key): bool { return isset($GLOBALS['pages'][$key]); }
+    $db = new class {
+        public function Execute(string $sql, int $limit): object
+        {
+            check($sql === "SELECT main_page FROM admin_pages WHERE page_key = 'catalogShareEverywhere'" && $limit === 1,
+                'Unexpected menu lookup.');
+            $page = $GLOBALS['pages']['catalogShareEverywhere'] ?? null;
+            return (object)['EOF' => $page === null, 'fields' => ['main_page' => $page[1] ?? null]];
+        }
+    };
+    function zen_db_perform(string $table, array $fields, string $type, string $where): void
+    {
+        check($table === TABLE_ADMIN_PAGES && $type === 'UPDATE'
+            && $where === "page_key = 'catalogShareEverywhere' AND main_page = 'share_everywhere'",
+            'Menu repair must target only the legacy row.');
+        $GLOBALS['pages']['catalogShareEverywhere'][1] = $fields['main_page'];
+    }
     function zen_register_admin_page(string $key, ...$details): void
     {
         $GLOBALS['pages'][$key] = $details;
@@ -42,17 +58,21 @@ namespace {
         if (!$passed) throw new RuntimeException($message);
     }
 
-    $root = dirname(__DIR__) . '/files/zc_plugins/ShareEverywhere/v1.0.0';
+    $root = dirname(__DIR__) . '/files/zc_plugins/ShareEverywhere/v1.0.1';
     require $root . '/Installer/ScriptedInstaller.php';
     $installer = new ScriptedInstaller();
     check($installer->install(), 'Install failed.');
-    check($pages['catalogShareEverywhere'] === ['BOX_CATALOG_SHARE_EVERYWHERE', 'share_everywhere', '', 'catalog', 'Y'],
+    check($pages['catalogShareEverywhere'] === ['BOX_CATALOG_SHARE_EVERYWHERE', 'FILENAME_SHARE_EVERYWHERE', '', 'catalog', 'Y'],
         'Catalog menu registration is incorrect.');
     $settings = json_decode($installer->settings[ShareEverywhere::KEY], true);
     check(is_array($settings) && !$settings['enabled'], 'Install defaults are incorrect.');
     $installer->settings[ShareEverywhere::KEY] = '{"enabled":true}';
+    check(defined($pages['catalogShareEverywhere'][1]) && constant($pages['catalogShareEverywhere'][1]) === 'share_everywhere',
+        'Zen Cart would skip a menu target that is not a defined filename constant.');
+    $pages['catalogShareEverywhere'][1] = 'share_everywhere';
     $pages['catalogShareEverywhere'][4] = 'N';
     check($installer->upgrade() && $installer->settings[ShareEverywhere::KEY] === '{"enabled":true}', 'Upgrade replaced settings.');
+    check($pages['catalogShareEverywhere'][1] === 'FILENAME_SHARE_EVERYWHERE', 'Upgrade did not repair the 1.0.0 menu.');
     check($pages['catalogShareEverywhere'][4] === 'N', 'Upgrade replaced the existing menu registration.');
 
     unset($pages['catalogShareEverywhere']);
