@@ -7,7 +7,7 @@ const { chromium } = require('playwright');
 
 async function main() {
     const html = execFileSync('php', [path.join(__dirname, 'render-fixture.php')], {encoding: 'utf8'});
-    const plugin = path.join(__dirname, '..', 'files', 'zc_plugins', 'ShareEverywhere', 'v1.0.3');
+    const plugin = path.join(__dirname, '..', 'files', 'zc_plugins', 'ShareEverywhere', 'v1.0.4');
     const browser = await chromium.launch();
     try {
         const page = await browser.newPage({viewport: {width: 1100, height: 800}});
@@ -21,8 +21,8 @@ async function main() {
                 await route.abort();
             } else if (url.pathname === '/duck') {
                 await route.fulfill({contentType: 'text/html', body: html});
-            } else if (url.pathname.startsWith('/zc_plugins/ShareEverywhere/v1.0.3/assets/')) {
-                await route.fulfill({path: path.join(plugin, url.pathname.split('/v1.0.3/')[1])});
+            } else if (url.pathname.startsWith('/zc_plugins/ShareEverywhere/v1.0.4/assets/')) {
+                await route.fulfill({path: path.join(plugin, url.pathname.split('/v1.0.4/')[1])});
             } else {
                 await route.fulfill({status: 404});
             }
@@ -31,9 +31,12 @@ async function main() {
         const widget = page.locator('#share-everywhere');
         const toggle = widget.getByRole('button', {name: 'More ways to share'});
         const panel = widget.locator('.se-panel');
+        const title = widget.locator('.se-title');
         const facebook = widget.getByRole('link', {name: 'Facebook', exact: true});
         assert.equal(await widget.evaluate(el => el.previousElementSibling.id), 'cartAdd');
         assert.equal(await widget.getAttribute('data-se-layout'), 'compact');
+        assert.equal(await title.isVisible(), true);
+        assert.equal(await title.textContent(), 'Share this duck');
         assert.equal(await facebook.isVisible(), true);
         assert.equal(await panel.isVisible(), false);
         await toggle.hover();
@@ -50,10 +53,11 @@ async function main() {
         assert.equal(await panel.isVisible(), false);
 
         await page.setViewportSize({width: 400, height: 760});
-        await widget.getByRole('button', {name: 'Share this product', exact: true}).waitFor();
+        await widget.getByRole('button', {name: 'Share this duck', exact: true}).waitFor();
         assert.equal(await widget.getAttribute('data-se-layout'), 'single');
+        assert.equal(await title.isVisible(), false);
         assert.equal(await facebook.isVisible(), false);
-        await widget.getByRole('button', {name: 'Share this product', exact: true}).click();
+        await widget.getByRole('button', {name: 'Share this duck', exact: true}).click();
         assert.equal(await facebook.isVisible(), true);
         assert.equal(await widget.getByRole('link', {name: 'Follow on Instagram'}).getAttribute('href'),
             'https://www.instagram.com/example/');

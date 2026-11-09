@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.4
+
+- Display the configured share title above the product-page controls when the layout uses a More button or has no disclosure button.
+
 ## 1.0.3
 
 - Use the standard Zen Cart admin HTML head on the settings page to resolve the legacy-header warning.

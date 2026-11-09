@@ -2,11 +2,12 @@
 declare(strict_types=1);
 
 define('IS_ADMIN_FLAG', false);
-$root = dirname(__DIR__) . '/files/zc_plugins/ShareEverywhere/v1.0.3';
+$root = dirname(__DIR__) . '/files/zc_plugins/ShareEverywhere/v1.0.4';
 require $root . '/lib/ShareEverywhere.php';
 
 $settings = ShareEverywhere::defaults();
 $settings['trigger'] = 'hover';
+$settings['label'] = 'Share this duck';
 $settings['buttons']['qr']['enabled'] = true;
 $settings['buttons']['follow-instagram']['enabled'] = true;
 $settings['buttons']['follow-instagram']['url'] = 'https://www.instagram.com/example/';
