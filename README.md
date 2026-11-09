@@ -1,5 +1,8 @@
 # Share Everywhere for Zen Cart
 
+**Download the install ZIP:** [Share-Everywhere-for-Zen-Cart-1.0.6.zip](https://github.com/mprough/Share-Everywhere-for-Zen-Cart/releases/download/v1.0.6/Share-Everywhere-for-Zen-Cart-1.0.6.zip). Extract it on your computer and follow the installation instructions below.
+
+
 Share Everywhere is a free plugin for Zen Cart ecommerce software. It adds configurable product sharing, messaging, bookmarks, and store profile buttons to product pages.
 
 ## Compatibility
