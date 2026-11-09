@@ -7,7 +7,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 final class ShareEverywhere
 {
-    public const VERSION = '1.0.6';
+    public const VERSION = '1.0.7';
     public const KEY = 'SHARE_EVERYWHERE_SETTINGS';
     public const MAX_CUSTOM = 20;
     public const COLOR_MODES = ['mono' => 'Monochrome', 'brand' => 'Platform colors', 'custom' => 'Custom color'];
@@ -127,6 +127,38 @@ final class ShareEverywhere
             ];
         }
         return $settings;
+    }
+
+    /**
+     * Reverses the HTML escaping Zen Cart's admin sanitizer applied to saved text before 1.0.7
+     * (htmlspecialchars with ENT_COMPAT, once per save). Touches only free-text fields.
+     */
+    public static function unescapeLegacy(array $saved): array
+    {
+        $fix = static function ($value) {
+            for ($i = 0; $i < 20 && is_string($value) && preg_match('/&(?:amp|quot|lt|gt);/', $value); $i++) {
+                $value = htmlspecialchars_decode($value, ENT_COMPAT);
+            }
+            return $value;
+        };
+        if (isset($saved['label'])) {
+            $saved['label'] = $fix($saved['label']);
+        }
+        foreach (is_array($saved['buttons'] ?? null) ? $saved['buttons'] : [] as $key => $row) {
+            if (is_array($row) && isset($row['url'])) {
+                $saved['buttons'][$key]['url'] = $fix($row['url']);
+            }
+        }
+        foreach (is_array($saved['custom'] ?? null) ? $saved['custom'] : [] as $i => $row) {
+            if (is_array($row)) {
+                foreach (['label', 'url'] as $field) {
+                    if (isset($row[$field])) {
+                        $saved['custom'][$i][$field] = $fix($row[$field]);
+                    }
+                }
+            }
+        }
+        return $saved;
     }
 
     public static function h(string $value): string
